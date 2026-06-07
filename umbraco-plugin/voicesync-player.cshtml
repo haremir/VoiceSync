@@ -1,0 +1,15 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Extensions
+
+@{
+    var audioUrl = Model.Value<string>("voiceSyncAudioUrl");
+}
+
+@if (!string.IsNullOrEmpty(audioUrl))
+{
+    <div class="voicesync-player" data-src="@audioUrl">
+        <button class="vs-play-btn" onclick="vsToggle(this)">▶ Yazıyı Dinle</button>
+        <span class="vs-time">0:00</span>
+        <audio class="vs-audio-element" preload="none"></audio>
+    </div>
+}
