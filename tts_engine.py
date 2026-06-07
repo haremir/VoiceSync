@@ -149,18 +149,22 @@ class TTSEngine:
 
         temp_wav_paths = []
         try:
-            # Generate each text chunk as a temporary WAV
+            # Generate each text chunk as a temporary WAV in an isolated loop
             for idx, chunk in enumerate(text_chunks):
-                # Using exaggeration=0.3 for natural Turkish pronunciation
-                wav_tensor = self.model.generate(
-                    text=chunk,
-                    language_id=language,
-                    audio_prompt_path=str(voice_path),
-                    exaggeration=0.3
-                )
-                temp_path = OUTPUTS_DIR / f"temp_{voice_id}_{idx}.wav"
-                torchaudio.save(str(temp_path), wav_tensor, self.model.sr)
-                temp_wav_paths.append(temp_path)
+                try:
+                    # Pass chunk as a single positional string to prevent list/tuple model conversion issues
+                    wav_tensor = self.model.generate(
+                        chunk,
+                        audio_prompt_path=str(voice_path),
+                        language_id=language,
+                        exaggeration=0.3
+                    )
+                    temp_path = OUTPUTS_DIR / f"_tmp_{output_filename}_{idx}.wav"
+                    torchaudio.save(str(temp_path), wav_tensor, self.model.sr)
+                    temp_wav_paths.append(temp_path)
+                except Exception as chunk_error:
+                    print(f"Error processing chunk {idx}: {chunk_error}")
+                    raise chunk_error
 
             # Define final MP3 output path
             out_mp3_path = OUTPUTS_DIR / output_filename
