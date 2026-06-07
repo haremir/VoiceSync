@@ -131,6 +131,17 @@ class TTSEngine:
         if not voice_path.exists():
             raise FileNotFoundError(f"Reference voice file not found (.wav or .mp3) for ID: {voice_id} at: {VOICES_DIR}")
 
+        # Check reference voice metadata (channels, sample rate)
+        try:
+            info = torchaudio.info(str(voice_path))
+            if info.num_channels > 1:
+                print(f"Warning: Reference voice '{voice_path.name}' is stereo ({info.num_channels} channels). "
+                      f"Yapay zeka modelleri mono seslerle daha stabil çalışır. Sentezleme esnasında sorun çıkabilir.")
+            if info.sample_rate not in (16000, 22050, 24000, 44100, 48000):
+                print(f"Warning: Reference voice '{voice_path.name}' has an unconventional sample rate ({info.sample_rate} Hz).")
+        except Exception as e:
+            print(f"Warning: Failed to inspect reference voice metadata for '{voice_path.name}': {e}")
+
         # Chunk the text
         text_chunks = chunk_text(text, max_chars=CHUNK_MAX_CHARS)
         if not text_chunks:
