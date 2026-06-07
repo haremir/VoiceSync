@@ -1,0 +1,32 @@
+[project]
+name = "voicesync"
+version = "0.1.0"
+description = "Open-source voice cloning based VoiceSync project"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "chatterbox-tts",
+    "fastapi",
+    "uvicorn[standard]",
+    "python-multipart",
+    "python-dotenv",
+    "aiofiles",
+    "pydub",
+    "pkuseg",
+    "static-ffmpeg",
+    "setuptools<71",
+]
+
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+pkuseg = { path = "pkuseg_dummy" }
+
+
