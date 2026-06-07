@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VoiceSync - CMS Entegrasyon Simülatörü</title>
-    <!-- Include the same styles used by WP and Umbraco plugins -->
+    <title>VoiceSync Çift Platformlu CMS Test Ortamı</title>
+    <!-- Include the player.css styles -->
     <link rel="stylesheet" href="player.css">
     <style>
         :root {
@@ -232,6 +232,12 @@
             border: 1px solid #fef08a;
         }
 
+        .status-orange {
+            background: #ffedd5;
+            color: #c2410c;
+            border: 1px solid #fed7aa;
+        }
+
         .status-green {
             background: #dcfce7;
             color: #166534;
@@ -271,7 +277,7 @@
 <body>
 
     <header>
-        <h1>VoiceSync Integration Simulator</h1>
+        <h1>VoiceSync Çift Platformlu CMS Test Ortamı</h1>
         <p>Lokal test ortamında WordPress ve Umbraco eklentilerinin asenkron ses klonlama mantığını canlı deneyimleyin.</p>
         <div class="auth-bar">
             <span class="auth-label">X-API-Key:</span>
@@ -288,19 +294,19 @@
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.158 12.786l-2.698 7.84c.816.234 1.677.374 2.57.374.96 0 1.88-.16 2.748-.445l-.014-.027-2.606-7.742zm-2.036-.328l2.062-6.012 2.115 6.012H10.122zM2.037 12c0 4.238 2.62 7.864 6.31 9.35l-4.99-14.5c-.84 1.51-1.32 3.273-1.32 5.15zm17.65-3.328c0-.986-.355-1.673-.658-2.193-.418-.682-.81-1.25-.81-1.92 0-.745.56-1.433 1.352-1.433.056 0 .11.006.166.014a9.905 9.905 0 0 0-7.697-3.132c-2.484 0-4.747.91-6.49 2.413.255.014.493.024.697.024.986 0 2.502-.12 2.502-.12.51-.03.57.712.06.772 0 0-.513.06-1.085.09l3.453 10.276 2.078-6.233-1.48-.043c-.573-.03-.513-.772.06-.772 0 0 1.547.12 2.478.12.93 0 2.48-.12 2.48-.12.512-.03.57.712.06.772 0 0-.51.06-1.082.09l3.41 10.15 1.012-3.385c.44-1.385.772-2.38.772-3.238zm2.26 1.832c.036-.51.056-1.007.056-1.504 0-2.302-.756-4.903-2.072-7.14a9.92 9.92 0 0 1 1.706 7.643c.123.336.223.682.223.978l-.004.023c.094-.002.09-.002.09-.002zM12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"/></svg>
                     WordPress
                 </div>
-                <div class="cms-badge">Eklenti v2.0.0</div>
+                <div class="cms-badge">WP-Cron Polling Simülasyonu</div>
             </div>
 
             <div class="blog-post" id="wpPost">
                 <div class="player-container" id="wpPlayerContainer"></div>
-                <h2 class="post-title" id="wpTitle">WordPress'te Yapay Zeka Dönemi Başladı</h2>
+                <h2 class="post-title" id="wpTitle">Yapay Zeka ve Yazılımın Gelecek Yüzyılı</h2>
                 <div class="post-summary">Blog yazılarının asenkron arka planda klonlanmış sesle okutulması artık çok kolay.</div>
                 <p class="post-body" id="wpBody">
-                    Bu yazının içeriği, WordPress eklentisi tarafından temizlenerek API'ye gönderilecek olan ana metindir. Sentezleme işlemi tamamlandığında, sayfanın tepesine otomatik olarak özel ses çalar bileşeni (VoiceSync Player) enjekte edilecektir. Sistem, arka planda WP-Cron kullanarak işlem kuyruğunu yönetir ve ana web sunucusunun yükünü minimumda tutar.
+                    Bu yazının içeriği, WordPress eklentisi tarafından temizlenerek API'ye gönderilecek olan ana metindir. Sentezleme işlemi tamamlandığında, sayfanın tepesine otomatik olarak özel ses çalar bileşeni (VoiceSync Player) enjekte edilecektir. Sistem, arka planda WP-Cron kullanarak işlem kuyruğunu yönetir ve ana web sunucusunun yükünü minimumda tutar. WP-Cron simülasyonu gereği, ilk durum sorgusu 30 saniye beklendikten sonra yapılacak ve ardışık sorgular da 30 saniye aralıklarla çalışacaktır.
                 </p>
             </div>
 
-            <button class="publish-btn" onclick="startGeneration('wp')">Yayınla (Publish)</button>
+            <button class="publish-btn" onclick="startGeneration('wp')">Yazıyı WordPress'te Yayınla (Publish)</button>
             <div id="wpStatus" class="status-box"></div>
         </div>
 
@@ -311,19 +317,19 @@
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L2.124 5.7L2.124 18.3L12 24L21.876 18.3L21.876 5.7L12 0ZM18.75 16.5L12 20.4L5.25 16.5L5.25 8.7L12 4.8L18.75 8.7L18.75 16.5Z"/></svg>
                     Umbraco
                 </div>
-                <div class="cms-badge">Hosted Service</div>
+                <div class="cms-badge">BackgroundService Poller Simülasyonu</div>
             </div>
 
             <div class="blog-post" id="umbPost">
                 <div class="player-container" id="umbPlayerContainer"></div>
-                <h2 class="post-title" id="umbTitle">.NET ve Umbraco 13 ile Kusursuz Ses Klonlama</h2>
+                <h2 class="post-title" id="umbTitle">Kurumsal Sistemlerde Mikroservis Entegrasyonları</h2>
                 <div class="post-summary">BackgroundService entegrasyonu sayesinde veritabanındaki görevler otomatik sorgulanır.</div>
                 <p class="post-body" id="umbBody">
-                    Umbraco tarafındaki test içeriğimiz de C# NotificationHandler ve HostedService yapılarını simüle eder. Yayınla butonuna bastığınızda, arka plan işi başlatılacak ve poller servis her 5 saniyede bir durumu sorgulayacaktır. C# tarafında oluşturulan Scope sayesinde, çoklu istekler altında bile Thread-Safety korunur ve veritabanı bağlantıları güvenli bir şekilde kapatılır.
+                    Umbraco tarafındaki test içeriğimiz de C# NotificationHandler ve HostedService yapılarını simüle eder. Yayınla butonuna bastığınızda, arka plan işi başlatılacak ve poller servis her 10 saniyede bir durumu sorgulayacaktır. C# tarafında oluşturulan Scope sayesinde, çoklu istekler altında bile Thread-Safety korunur ve veritabanı bağlantıları güvenli bir şekilde kapatılır. Umbraco simülasyonu gereği, sorgular kesintisiz 10 saniyelik döngülerle yürütülecektir.
                 </p>
             </div>
 
-            <button class="publish-btn" onclick="startGeneration('umb')">Yayınla (Publish)</button>
+            <button class="publish-btn" onclick="startGeneration('umb')">İçeriği Umbraco'da Yayınla ve Canlıya Al</button>
             <div id="umbStatus" class="status-box"></div>
         </div>
 
@@ -332,8 +338,12 @@
     <!-- Include player.js logic -->
     <script src="player.js"></script>
     <script>
-        // Store interval references globally for cancellation
-        const pollIntervals = {
+        // Store timers and intervals globally
+        const activeTimers = {
+            wp: null,
+            umb: null
+        };
+        const activeIntervals = {
             wp: null,
             umb: null
         };
@@ -344,14 +354,13 @@
 
         async function startGeneration(cms) {
             // Clean up old state
-            clearInterval(pollIntervals[cms]);
+            clearTimeout(activeTimers[cms]);
+            clearInterval(activeIntervals[cms]);
             document.getElementById(cms + 'PlayerContainer').innerHTML = '';
             
             const statusBox = document.getElementById(cms + 'Status');
             statusBox.style.display = 'block';
-            statusBox.className = 'status-box status-yellow';
-            statusBox.innerHTML = 'İşlem başlatılıyor...';
-
+            
             const apiKey = getApiKey();
             if (!apiKey) {
                 statusBox.className = 'status-box status-red';
@@ -359,13 +368,22 @@
                 return;
             }
 
-            // Extract the clean text from summary and body
+            // Extract text
             const summary = document.querySelector(`#${cms}Post .post-summary`).innerText;
             const body = document.getElementById(cms + 'Body').innerText;
             const textToSynthesize = (summary + " " + body).substring(0, 5000);
 
+            // Set initial state
+            if (cms === 'wp') {
+                statusBox.className = 'status-box status-yellow';
+                statusBox.innerHTML = 'İstek gönderiliyor...';
+            } else {
+                statusBox.className = 'status-box status-orange';
+                statusBox.innerHTML = 'İstek gönderiliyor...';
+            }
+
             try {
-                // Send the POST request to our FastAPI backend
+                // Send the POST request to /generate
                 const response = await fetch('/generate', {
                     method: 'POST',
                     headers: {
@@ -395,10 +413,22 @@
                 const data = await response.json();
                 const taskId = data.task_id;
                 
-                statusBox.innerHTML = `Durum: Ses üretimi arka planda başlatıldı.<br><small>Task ID: ${taskId}</small>`;
-                
-                // Start polling every 5 seconds
-                pollIntervals[cms] = setInterval(() => checkStatus(cms, taskId, apiKey), 5000);
+                if (cms === 'wp') {
+                    // WP: First check after 30 seconds, then check every 30 seconds
+                    statusBox.className = 'status-box status-yellow';
+                    statusBox.innerHTML = `WP-Cron Tetiklendi: İlk durum sorgusu 30 saniye sonra yapılacak (Task ID: ${taskId})`;
+                    
+                    activeTimers.wp = setTimeout(() => {
+                        checkStatus(cms, taskId, apiKey);
+                        activeIntervals.wp = setInterval(() => checkStatus(cms, taskId, apiKey), 30000);
+                    }, 30000);
+                } else {
+                    // Umbraco: Check every 10 seconds immediately
+                    statusBox.className = 'status-box status-orange';
+                    statusBox.innerHTML = `.NET BackgroundService Aktif: Sürekli 10 saniyelik döngülerle sunucu taranıyor... (Task ID: ${taskId})`;
+                    
+                    activeIntervals.umb = setInterval(() => checkStatus(cms, taskId, apiKey), 10000);
+                }
 
             } catch (err) {
                 statusBox.className = 'status-box status-red';
@@ -417,7 +447,8 @@
                 });
 
                 if (!response.ok) {
-                    clearInterval(pollIntervals[cms]);
+                    clearInterval(activeIntervals[cms]);
+                    clearTimeout(activeTimers[cms]);
                     statusBox.className = 'status-box status-red';
                     statusBox.innerHTML = `Hata: Görev sorgulama başarısız oldu.`;
                     return;
@@ -426,12 +457,17 @@
                 const data = await response.json();
                 
                 if (data.status === 'processing' || data.status === 'pending') {
-                    statusBox.innerHTML = `Durum: Yapay zeka sesini sentezliyor, lütfen bekleyin...<br><small>Task ID: ${taskId}</small>`;
+                    if (cms === 'wp') {
+                        statusBox.innerHTML = `WP-Cron: Yapay zeka sesini sentezliyor, lütfen bekleyin... (Her 30s'de bir sorgulanıyor)<br><small>Task ID: ${taskId}</small>`;
+                    } else {
+                        statusBox.innerHTML = `.NET Poller: Yapay zeka sesini sentezliyor, lütfen bekleyin... (Her 10s'de bir sorgulanıyor)<br><small>Task ID: ${taskId}</small>`;
+                    }
                 } else if (data.status === 'done' && data.audio_url) {
-                    clearInterval(pollIntervals[cms]);
+                    clearInterval(activeIntervals[cms]);
+                    clearTimeout(activeTimers[cms]);
                     
                     statusBox.className = 'status-box status-green';
-                    statusBox.innerHTML = 'Ses sentezi tamamlandı! Oynatıcı enjekte edildi.';
+                    statusBox.innerHTML = 'Seslendirme Başarıyla Tamamlandı ve Önbelleğe Alındı!';
 
                     // Build full audio URL
                     const fullAudioUrl = window.location.origin + data.audio_url;
@@ -447,13 +483,14 @@
                     `;
 
                 } else if (data.status.startsWith('error') || data.status === 'failed') {
-                    clearInterval(pollIntervals[cms]);
+                    clearInterval(activeIntervals[cms]);
+                    clearTimeout(activeTimers[cms]);
                     statusBox.className = 'status-box status-red';
                     statusBox.innerHTML = `Hata: Sentezleme başarısız oldu. API Detayı: ${data.status}`;
                 }
 
             } catch (err) {
-                // Ignore transient network errors, continue polling
+                // Continue polling on network issues
                 statusBox.innerHTML = `Bağlantı kesildi, tekrar deneniyor...<br><small>${err.message}</small>`;
             }
         }
