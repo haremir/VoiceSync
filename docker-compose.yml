@@ -1,0 +1,15 @@
+services:
+  voicesync:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      # Bind-mount local directories so generated files and uploaded voices
+      # survive container restarts and rebuilds.
+      - ./voices:/app/voices
+      - ./outputs:/app/outputs
+    env_file:
+      # API_KEY and other secrets are injected at runtime from .env —
+      # they are never baked into the image layer.
+      - .env
+    restart: unless-stopped
