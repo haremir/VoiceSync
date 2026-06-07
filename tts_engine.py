@@ -124,10 +124,12 @@ class TTSEngine:
         if self.model is None:
             raise RuntimeError("Model is not loaded. Call load() first before generating speech.")
 
-        # Resolve and validate reference voice path
+        # Resolve and validate reference voice path (checking both .wav and .mp3 formats)
         voice_path = VOICES_DIR / f"{voice_id}.wav"
         if not voice_path.exists():
-            raise FileNotFoundError(f"Reference voice file not found at: {voice_path}")
+            voice_path = VOICES_DIR / f"{voice_id}.mp3"
+        if not voice_path.exists():
+            raise FileNotFoundError(f"Reference voice file not found (.wav or .mp3) for ID: {voice_id} at: {VOICES_DIR}")
 
         # Chunk the text
         text_chunks = chunk_text(text, max_chars=CHUNK_MAX_CHARS)

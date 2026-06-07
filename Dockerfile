@@ -24,6 +24,7 @@ RUN uv sync --frozen --no-dev
 
 # ── Application code ───────────────────────────────────────────────────────────
 COPY main.py tts_engine.py config.py ./
+COPY test_environment/ ./test_environment/
 
 # ── Runtime directories ────────────────────────────────────────────────────────
 # Create voices/ and outputs/ so the container starts cleanly even without

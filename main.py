@@ -53,6 +53,9 @@ app = FastAPI(
 # Serve generated MP3 files under /audio
 app.mount("/audio", StaticFiles(directory=str(OUTPUTS_DIR)), name="audio")
 
+# Serve test environment website at /test-site
+app.mount("/test-site", StaticFiles(directory="test_environment", html=True), name="test-site")
+
 # ---------------------------------------------------------------------------
 # Auth dependency
 # ---------------------------------------------------------------------------
