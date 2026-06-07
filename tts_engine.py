@@ -142,40 +142,38 @@ class TTSEngine:
         except Exception as e:
             print(f"Warning: Failed to inspect reference voice metadata for '{voice_path.name}': {e}")
 
-        # Chunk the text
-        text_chunks = chunk_text(text, max_chars=CHUNK_MAX_CHARS)
-        if not text_chunks:
-            raise ValueError("No valid text chunks to generate audio from.")
+        # Check and clean the input text
+        clean_text = text.strip() if text else ""
+        if not clean_text:
+            raise ValueError("No valid text to generate audio from.")
 
-        temp_wav_paths = []
+        temp_wav_path = OUTPUTS_DIR / f"_tmp_{output_filename}.wav"
         try:
-            # Generate each text chunk as a temporary WAV in an isolated loop
-            for idx, chunk in enumerate(text_chunks):
-                try:
-                    # Pass chunk as a single positional string to prevent list/tuple model conversion issues
-                    wav_tensor = self.model.generate(
-                        chunk,
-                        audio_prompt_path=str(voice_path),
-                        language_id=language,
-                        exaggeration=0.3
-                    )
-                    temp_path = OUTPUTS_DIR / f"_tmp_{output_filename}_{idx}.wav"
-                    torchaudio.save(str(temp_path), wav_tensor, self.model.sr)
-                    temp_wav_paths.append(temp_path)
-                except Exception as chunk_error:
-                    print(f"Error processing chunk {idx}: {chunk_error}")
-                    raise chunk_error
-
-            # Define final MP3 output path
+            # Generate the entire text as a single string to avoid tensor size alignment/stacking issues
+            wav_tensor = self.model.generate(
+                clean_text,
+                audio_prompt_path=str(voice_path),
+                language_id=language,
+                exaggeration=0.3
+            )
+            
+            # Save the raw tensor directly to disk
+            torchaudio.save(str(temp_wav_path), wav_tensor, self.model.sr)
+            
+            # Define final MP3 output path and export in one go using pydub
             out_mp3_path = OUTPUTS_DIR / output_filename
-            merge_wav_files(temp_wav_paths, out_mp3_path)
+            sound = AudioSegment.from_wav(str(temp_wav_path))
+            sound.export(str(out_mp3_path), format="mp3", bitrate="128k")
+            
             return out_mp3_path
 
+        except Exception as e:
+            print(f"Error during TTS generation: {e}")
+            raise e
         finally:
-            # Clean up all temporary WAV files
-            for temp_path in temp_wav_paths:
-                try:
-                    if temp_path.exists():
-                        temp_path.unlink()
-                except Exception as e:
-                    print(f"Warning: Failed to delete temporary file {temp_path}: {e}")
+            # Clean up the temporary WAV file
+            try:
+                if temp_wav_path.exists():
+                    temp_wav_path.unlink()
+            except Exception as e:
+                print(f"Warning: Failed to delete temporary file {temp_wav_path}: {e}")
