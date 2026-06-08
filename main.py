@@ -74,11 +74,18 @@ class GenerateRequest(BaseModel):
     text: str
     voice_id: str
     language: str = "tr"
+    exaggeration: float = 0.05
+    temperature: float = 0.7
+    speed: float = 1.0
+    noise_scale: float = 0.667
+    noise_scale_w: float = 0.8
 
 # ---------------------------------------------------------------------------
 # Background task worker (plain Python function — runs in thread pool)
 # ---------------------------------------------------------------------------
-def run_tts(task_id: str, text: str, voice_id: str, language: str) -> None:
+def run_tts(task_id: str, text: str, voice_id: str, language: str, 
+            exaggeration: float, temperature: float,
+            speed: float, noise_scale: float, noise_scale_w: float) -> None:
     """Execute TTS synthesis and update the in-memory task store."""
     try:
         output_filename = f"{task_id}.mp3"
@@ -87,6 +94,11 @@ def run_tts(task_id: str, text: str, voice_id: str, language: str) -> None:
             voice_id=voice_id,
             output_filename=output_filename,
             language=language,
+            speed=speed,
+            noise_scale=noise_scale,
+            noise_scale_w=noise_scale_w,
+            exaggeration=exaggeration,
+            temperature=temperature,
         )
         task_result[task_id] = f"/audio/{out_path.name}"
         task_status[task_id] = "done"
@@ -126,6 +138,11 @@ async def generate(
         text=request.text,
         voice_id=request.voice_id,
         language=request.language,
+        exaggeration=request.exaggeration,
+        temperature=request.temperature,
+        speed=request.speed,
+        noise_scale=request.noise_scale,
+        noise_scale_w=request.noise_scale_w,
     )
 
     return {"task_id": task_id, "status": "processing"}

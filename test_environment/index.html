@@ -274,14 +274,29 @@
         }
     </style>
 </head>
-<body>
-
-    <header>
+<body>    <header>
         <h1>VoiceSync Çift Platformlu CMS Test Ortamı</h1>
         <p>Lokal test ortamında WordPress ve Umbraco eklentilerinin asenkron ses klonlama mantığını canlı deneyimleyin.</p>
         <div class="auth-bar">
             <span class="auth-label">X-API-Key:</span>
             <input type="password" id="apiKeyInput" class="auth-input" placeholder="Backend API Key anahtarını girin..." value="">
+        </div>
+        <div class="settings-bar" style="max-width: 900px; margin: 15px auto 0 auto; background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 15px; border: 1px solid rgba(255, 255, 255, 0.15); display: flex; justify-content: space-around; gap: 20px; align-items: center; color: white; font-size: 14px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="speedInput" style="font-weight: 600; white-space: nowrap;">Konuşma Hızı (Speed):</label>
+                <input type="range" id="speedInput" min="0.5" max="2.0" step="0.05" value="1.00" oninput="document.getElementById('speedVal').innerText = parseFloat(this.value).toFixed(2)" style="width: 100px;">
+                <span id="speedVal" style="font-family: monospace; width: 35px; text-align: left;">1.00</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="noiseScaleInput" style="font-weight: 600; white-space: nowrap;">Duygu & Canlılık (Noise Scale):</label>
+                <input type="range" id="noiseScaleInput" min="0.0" max="1.5" step="0.05" value="0.67" oninput="document.getElementById('noiseScaleVal').innerText = parseFloat(this.value).toFixed(2)" style="width: 100px;">
+                <span id="noiseScaleVal" style="font-family: monospace; width: 35px; text-align: left;">0.67</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="noiseScaleWInput" style="font-weight: 600; white-space: nowrap;">Ritim & Tonlama (Noise Scale W):</label>
+                <input type="range" id="noiseScaleWInput" min="0.0" max="1.5" step="0.05" value="0.80" oninput="document.getElementById('noiseScaleWVal').innerText = parseFloat(this.value).toFixed(2)" style="width: 100px;">
+                <span id="noiseScaleWVal" style="font-family: monospace; width: 35px; text-align: left;">0.80</span>
+            </div>
         </div>
     </header>
 
@@ -373,6 +388,11 @@
             const body = document.getElementById(cms + 'Body').innerText;
             const textToSynthesize = (summary + " " + body).substring(0, 5000);
 
+            // Extract settings
+            const speed = parseFloat(document.getElementById('speedInput').value);
+            const noiseScale = parseFloat(document.getElementById('noiseScaleInput').value);
+            const noiseScaleW = parseFloat(document.getElementById('noiseScaleWInput').value);
+
             // Set initial state
             if (cms === 'wp') {
                 statusBox.className = 'status-box status-yellow';
@@ -393,7 +413,10 @@
                     body: JSON.stringify({
                         text: textToSynthesize,
                         voice_id: 'default',
-                        language: 'tr'
+                        language: 'tr',
+                        speed: speed,
+                        noise_scale: noiseScale,
+                        noise_scale_w: noiseScaleW
                     })
                 });
 
