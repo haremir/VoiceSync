@@ -8,8 +8,12 @@ services:
       # survive container restarts and rebuilds.
       - ./voices:/app/voices
       - ./outputs:/app/outputs
+      - hf_cache:/root/.cache
     env_file:
       # API_KEY and other secrets are injected at runtime from .env —
       # they are never baked into the image layer.
       - .env
     restart: unless-stopped
+
+volumes:
+  hf_cache:

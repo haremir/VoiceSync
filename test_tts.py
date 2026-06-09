@@ -5,52 +5,51 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent))
 
 import config
-from tts_engine import chunk_text, TTSEngine
+from tts_engine import TTSEngine, normalize_english_words
 
-def test_text_chunking():
-    print("=== Test 1: Text Chunking ===")
-    long_text = (
-        "Ses sentezleme teknolojisi, yapay zeka alanında son yıllarda inanılmaz bir gelişme gösterdi. "
-        "Artık modeller, sadece birkaç saniyelik referans ses kayıtlarını kullanarak son derece doğal, "
-        "insansı ve akıcı konuşmalar üretebiliyor. Bu proje kapsamında geliştirdiğimiz VoiceSync, "
-        "kullanıcılara bu gelişmiş ses klonlama yeteneğini modern API standartlarında sunmayı hedefliyor. "
-        "Bölme işleminin 200 karakter sınırına uyup uymadığını kontrol etmek için bu çok uzun cümleyi bilerek buraya ekledik."
-    )
+def test_phonetic_normalization():
+    print("=== Test 1: Phonetic Normalization ===")
+    test_phrase = "C# ile WordPress sitelerinde BackgroundService ve HostedService geliştirmek FastAPI ve Docker ile çok kolay."
+    expected = "si şarp ile vörpres sitelerinde bekgraund servis ve hostıd servis geliştirmek fest ey-pi-ay ve dokır ile çok kolay."
     
-    print(f"Original Text Length: {len(long_text)} characters.")
-    chunks = chunk_text(long_text, max_chars=200)
-    print(f"Generated Chunks count: {len(chunks)}")
+    result = normalize_english_words(test_phrase)
+    print(f"Original:  {test_phrase}")
+    print(f"Normalized: {result}")
     
-    for idx, chunk in enumerate(chunks):
-        print(f"  Chunk {idx + 1} ({len(chunk)} chars): {chunk}")
-        assert len(chunk) <= 200, f"Error: Chunk {idx + 1} exceeds 200 characters limit!"
-    
-    print("Text Chunking Test: PASSED\n")
+    assert "si şarp" in result, "C# was not normalized correctly"
+    assert "vörpres" in result, "WordPress was not normalized correctly"
+    assert "bekgraund servis" in result, "BackgroundService was not normalized correctly"
+    assert "hostıd servis" in result, "HostedService was not normalized correctly"
+    assert "fest ey-pi-ay" in result, "FastAPI was not normalized correctly"
+    assert "dokır" in result, "Docker was not normalized correctly"
+    print("Phonetic Normalization Test: PASSED\n")
 
 def test_audio_generation():
-    print("=== Test 2: Audio Generation ===")
+    print("=== Test 2: Audio Generation with Parameters ===")
     test_text = (
         "Merhaba! VoiceSync ses klonlama sisteminin test aşamasına hoş geldiniz. "
-        "Şu an Chatterbox TTS motoru aktif olarak çalışıyor ve Türkçe ses sentezleme testi gerçekleştiriyor. "
-        "Her şey yolunda görünüyor."
+        "BackgroundService ve WordPress entegrasyonu başarıyla çalışıyor."
     )
     
     engine = TTSEngine()
-    print("Loading TTS model into memory (this may take a moment on first run)...")
+    print("Loading VITS models (preheating)...")
     engine.load()
     print("Model loaded successfully.")
     
     output_file = "test_output.mp3"
-    print(f"Generating voice for text using reference 'default' voice ID...")
+    print("Generating voice with custom speed and noise parameters...")
     
     try:
         out_path = engine.generate(
             text=test_text,
             voice_id="default",
             output_filename=output_file,
-            language="tr"
+            language="tr",
+            speed=1.1,
+            noise_scale=0.75,
+            noise_scale_w=0.85
         )
-        print(f"Success! Audio successfully generated and saved at: {out_path}")
+        print(f"Success! Audio successfully generated at: {out_path}")
         assert out_path.exists(), f"Error: Output file does not exist at {out_path}"
         print(f"Output file size: {out_path.stat().st_size} bytes.")
         print("Audio Generation Test: PASSED")
@@ -59,5 +58,6 @@ def test_audio_generation():
         sys.exit(1)
 
 if __name__ == "__main__":
-    test_text_chunking()
+    test_phonetic_normalization()
     test_audio_generation()
+

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceSync Çift Platformlu CMS Test Ortamı</title>
+    <!-- Include the player.css styles -->
+    <link rel="stylesheet" href="player.css">
+    <style>
+        :root {
+            --wp-color: #007cba;
+            --wp-hover: #006ba1;
+            --umb-color: #ec5825;
+            --umb-hover: #d44718;
+            --bg-dark: #0f172a;
+            --card-light: #ffffff;
+            --card-dark: #1e293b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Header styling */
+        header {
+            background: linear-gradient(135deg, #4f46e5, #312e81);
+            color: #ffffff;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            margin: 0 0 20px 0;
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        .auth-bar {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auth-label {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .auth-input {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 14px;
+            font-family: monospace;
+            outline: none;
+            padding: 4px 8px;
+        }
+
+        .auth-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Container Layout */
+        .simulator-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .simulator-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Column/Card styling */
+        .cms-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .cms-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .cms-card.wordpress {
+            border-top: 5px solid var(--wp-color);
+        }
+
+        .cms-card.umbraco {
+            border-top: 5px solid var(--umb-color);
+        }
+
+        .cms-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 15px;
+        }
+
+        .cms-logo {
+            font-weight: 800;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .wordpress .cms-logo { color: var(--wp-color); }
+        .umbraco .cms-logo { color: var(--umb-color); }
+
+        .cms-badge {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 20px;
+            color: #ffffff;
+        }
+
+        .wordpress .cms-badge { background: var(--wp-color); }
+        .umbraco .cms-badge { background: var(--umb-color); }
+
+        /* Blog Post styling */
+        .blog-post {
+            flex-grow: 1;
+            margin-bottom: 25px;
+        }
+
+        .post-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            line-height: 1.3;
+        }
+
+        .post-summary {
+            font-size: 15px;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            padding-left: 10px;
+            border-left: 3px solid #cbd5e1;
+        }
+
+        .post-body {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #334155;
+            text-align: justify;
+        }
+
+        /* Controls */
+        .publish-btn {
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .wordpress .publish-btn {
+            background: var(--wp-color);
+        }
+        .wordpress .publish-btn:hover {
+            background: var(--wp-hover);
+        }
+
+        .umbraco .publish-btn {
+            background: var(--umb-color);
+        }
+        .umbraco .publish-btn:hover {
+            background: var(--umb-hover);
+        }
+
+        /* Status box */
+        .status-box {
+            margin-top: 15px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .status-yellow {
+            background: #fef9c3;
+            color: #854d0e;
+            border: 1px solid #fef08a;
+        }
+
+        .status-orange {
+            background: #ffedd5;
+            color: #c2410c;
+            border: 1px solid #fed7aa;
+        }
+
+        .status-green {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .status-red {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        /* Dynamic player area */
+        .player-container {
+            margin-bottom: 15px;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: var(--bg-dark);
+                color: #f1f5f9;
+            }
+            .cms-card {
+                background: var(--card-dark);
+                border-color: #334155;
+            }
+            .post-body {
+                color: #cbd5e1;
+            }
+            .cms-header {
+                border-bottom-color: #334155;
+            }
+        }
+    </style>
+</head>
+<body>    <header>
+        <h1>VoiceSync Çift Platformlu CMS Test Ortamı</h1>
+        <p>Lokal test ortamında WordPress ve Umbraco eklentilerinin asenkron ses klonlama mantığını canlı deneyimleyin.</p>
+        <div class="auth-bar">
+            <span class="auth-label">X-API-Key:</span>
+            <input type="password" id="apiKeyInput" class="auth-input" placeholder="Backend API Key anahtarını girin..." value="">
+        </div>
+        <div class="settings-bar" style="max-width: 900px; margin: 15px auto 0 auto; background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 15px; border: 1px solid rgba(255, 255, 255, 0.15); display: flex; justify-content: space-around; gap: 20px; align-items: center; color: white; font-size: 14px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="speedInput" style="font-weight: 600; white-space: nowrap;">Konuşma Hızı (Speed):</label>
+                <input type="range" id="speedInput" min="0.5" max="2.0" step="0.05" value="1.00" oninput="document.getElementById('speedVal').innerText = parseFloat(this.value).toFixed(2)" style="width: 100px;">
+                <span id="speedVal" style="font-family: monospace; width: 35px; text-align: left;">1.00</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="noiseScaleInput" style="font-weight: 600; white-space: nowrap;">Duygu & Canlılık (Noise Scale):</label>
+                <input type="range" id="noiseScaleInput" min="0.0" max="1.5" step="0.05" value="0.67" oninput="document.getElementById('noiseScaleVal').innerText = parseFloat(this.value).toFixed(2)" style="width: 100px;">
+                <span id="noiseScaleVal" style="font-family: monospace; width: 35px; text-align: left;">0.67</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="noiseScaleWInput" style="font-weight: 600; white-space: nowrap;">Ritim & Tonlama (Noise Scale W):</label>
+                <input type="range" id="noiseScaleWInput" min="0.0" max="1.5" step="0.05" value="0.80" oninput="document.getElementById('noiseScaleWVal').innerText = parseFloat(this.value).toFixed(2)" style="width: 100px;">
+                <span id="noiseScaleWVal" style="font-family: monospace; width: 35px; text-align: left;">0.80</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="simulator-container">
+
+        <!-- WordPress Simulation Column -->
+        <div class="cms-card wordpress">
+            <div class="cms-header">
+                <div class="cms-logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.158 12.786l-2.698 7.84c.816.234 1.677.374 2.57.374.96 0 1.88-.16 2.748-.445l-.014-.027-2.606-7.742zm-2.036-.328l2.062-6.012 2.115 6.012H10.122zM2.037 12c0 4.238 2.62 7.864 6.31 9.35l-4.99-14.5c-.84 1.51-1.32 3.273-1.32 5.15zm17.65-3.328c0-.986-.355-1.673-.658-2.193-.418-.682-.81-1.25-.81-1.92 0-.745.56-1.433 1.352-1.433.056 0 .11.006.166.014a9.905 9.905 0 0 0-7.697-3.132c-2.484 0-4.747.91-6.49 2.413.255.014.493.024.697.024.986 0 2.502-.12 2.502-.12.51-.03.57.712.06.772 0 0-.513.06-1.085.09l3.453 10.276 2.078-6.233-1.48-.043c-.573-.03-.513-.772.06-.772 0 0 1.547.12 2.478.12.93 0 2.48-.12 2.48-.12.512-.03.57.712.06.772 0 0-.51.06-1.082.09l3.41 10.15 1.012-3.385c.44-1.385.772-2.38.772-3.238zm2.26 1.832c.036-.51.056-1.007.056-1.504 0-2.302-.756-4.903-2.072-7.14a9.92 9.92 0 0 1 1.706 7.643c.123.336.223.682.223.978l-.004.023c.094-.002.09-.002.09-.002zM12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"/></svg>
+                    WordPress
+                </div>
+                <div class="cms-badge">WP-Cron Polling Simülasyonu</div>
+            </div>
+
+            <div class="blog-post" id="wpPost">
+                <div class="player-container" id="wpPlayerContainer"></div>
+                <h2 class="post-title" id="wpTitle">Yapay Zeka ve Yazılımın Gelecek Yüzyılı</h2>
+                <div class="post-summary">Blog yazılarının asenkron arka planda klonlanmış sesle okutulması artık çok kolay.</div>
+                <p class="post-body" id="wpBody">
+                    Bu yazının içeriği, WordPress eklentisi tarafından temizlenerek API'ye gönderilecek olan ana metindir. Sentezleme işlemi tamamlandığında, sayfanın tepesine otomatik olarak özel ses çalar bileşeni (VoiceSync Player) enjekte edilecektir. Sistem, arka planda WP-Cron kullanarak işlem kuyruğunu yönetir ve ana web sunucusunun yükünü minimumda tutar. WP-Cron simülasyonu gereği, ilk durum sorgusu 30 saniye beklendikten sonra yapılacak ve ardışık sorgular da 30 saniye aralıklarla çalışacaktır.
+                </p>
+            </div>
+
+            <button class="publish-btn" onclick="startGeneration('wp')">Yazıyı WordPress'te Yayınla (Publish)</button>
+            <div id="wpStatus" class="status-box"></div>
+        </div>
+
+        <!-- Umbraco Simulation Column -->
+        <div class="cms-card umbraco">
+            <div class="cms-header">
+                <div class="cms-logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L2.124 5.7L2.124 18.3L12 24L21.876 18.3L21.876 5.7L12 0ZM18.75 16.5L12 20.4L5.25 16.5L5.25 8.7L12 4.8L18.75 8.7L18.75 16.5Z"/></svg>
+                    Umbraco
+                </div>
+                <div class="cms-badge">BackgroundService Poller Simülasyonu</div>
+            </div>
+
+            <div class="blog-post" id="umbPost">
+                <div class="player-container" id="umbPlayerContainer"></div>
+                <h2 class="post-title" id="umbTitle">Kurumsal Sistemlerde Mikroservis Entegrasyonları</h2>
+                <div class="post-summary">BackgroundService entegrasyonu sayesinde veritabanındaki görevler otomatik sorgulanır.</div>
+                <p class="post-body" id="umbBody">
+                    Umbraco tarafındaki test içeriğimiz de C# NotificationHandler ve HostedService yapılarını simüle eder. Yayınla butonuna bastığınızda, arka plan işi başlatılacak ve poller servis her 10 saniyede bir durumu sorgulayacaktır. C# tarafında oluşturulan Scope sayesinde, çoklu istekler altında bile Thread-Safety korunur ve veritabanı bağlantıları güvenli bir şekilde kapatılır. Umbraco simülasyonu gereği, sorgular kesintisiz 10 saniyelik döngülerle yürütülecektir.
+                </p>
+            </div>
+
+            <button class="publish-btn" onclick="startGeneration('umb')">İçeriği Umbraco'da Yayınla ve Canlıya Al</button>
+            <div id="umbStatus" class="status-box"></div>
+        </div>
+
+    </div>
+
+    <!-- Include player.js logic -->
+    <script src="player.js"></script>
+    <script>
+        // Store timers and intervals globally
+        const activeTimers = {
+            wp: null,
+            umb: null
+        };
+        const activeIntervals = {
+            wp: null,
+            umb: null
+        };
+
+        function getApiKey() {
+            return document.getElementById('apiKeyInput').value.trim();
+        }
+
+        async function startGeneration(cms) {
+            // Clean up old state
+            clearTimeout(activeTimers[cms]);
+            clearInterval(activeIntervals[cms]);
+            document.getElementById(cms + 'PlayerContainer').innerHTML = '';
+            
+            const statusBox = document.getElementById(cms + 'Status');
+            statusBox.style.display = 'block';
+            
+            const apiKey = getApiKey();
+            if (!apiKey) {
+                statusBox.className = 'status-box status-red';
+                statusBox.innerHTML = 'Hata: Lütfen üst kısımdan geçerli bir X-API-Key anahtarı girin!';
+                return;
+            }
+
+            // Extract text
+            const summary = document.querySelector(`#${cms}Post .post-summary`).innerText;
+            const body = document.getElementById(cms + 'Body').innerText;
+            const textToSynthesize = (summary + " " + body).substring(0, 5000);
+
+            // Extract settings
+            const speed = parseFloat(document.getElementById('speedInput').value);
+            const noiseScale = parseFloat(document.getElementById('noiseScaleInput').value);
+            const noiseScaleW = parseFloat(document.getElementById('noiseScaleWInput').value);
+
+            // Set initial state
+            if (cms === 'wp') {
+                statusBox.className = 'status-box status-yellow';
+                statusBox.innerHTML = 'İstek gönderiliyor...';
+            } else {
+                statusBox.className = 'status-box status-orange';
+                statusBox.innerHTML = 'İstek gönderiliyor...';
+            }
+
+            try {
+                // Send the POST request to /generate
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': apiKey
+                    },
+                    body: JSON.stringify({
+                        text: textToSynthesize,
+                        voice_id: 'default',
+                        language: 'tr',
+                        speed: speed,
+                        noise_scale: noiseScale,
+                        noise_scale_w: noiseScaleW
+                    })
+                });
+
+                if (response.status === 401) {
+                    statusBox.className = 'status-box status-red';
+                    statusBox.innerHTML = 'Hata: Yetkilendirme başarısız (Geçersiz API Key!)';
+                    return;
+                }
+
+                if (!response.ok) {
+                    const errBody = await response.json().catch(() => ({detail: 'Bilinmeyen hata'}));
+                    statusBox.className = 'status-box status-red';
+                    statusBox.innerHTML = `Hata: API isteği başarısız oldu (${errBody.detail || response.statusText})`;
+                    return;
+                }
+
+                const data = await response.json();
+                const taskId = data.task_id;
+                
+                if (cms === 'wp') {
+                    // WP: First check after 30 seconds, then check every 30 seconds
+                    statusBox.className = 'status-box status-yellow';
+                    statusBox.innerHTML = `WP-Cron Tetiklendi: İlk durum sorgusu 30 saniye sonra yapılacak (Task ID: ${taskId})`;
+                    
+                    activeTimers.wp = setTimeout(() => {
+                        checkStatus(cms, taskId, apiKey);
+                        activeIntervals.wp = setInterval(() => checkStatus(cms, taskId, apiKey), 30000);
+                    }, 30000);
+                } else {
+                    // Umbraco: Check every 10 seconds immediately
+                    statusBox.className = 'status-box status-orange';
+                    statusBox.innerHTML = `.NET BackgroundService Aktif: Sürekli 10 saniyelik döngülerle sunucu taranıyor... (Task ID: ${taskId})`;
+                    
+                    activeIntervals.umb = setInterval(() => checkStatus(cms, taskId, apiKey), 10000);
+                }
+
+            } catch (err) {
+                statusBox.className = 'status-box status-red';
+                statusBox.innerHTML = `Hata: Sunucuya bağlanılamadı (${err.message})`;
+            }
+        }
+
+        async function checkStatus(cms, taskId, apiKey) {
+            const statusBox = document.getElementById(cms + 'Status');
+            
+            try {
+                const response = await fetch(`/status/${encodeURIComponent(taskId)}`, {
+                    headers: {
+                        'X-API-Key': apiKey
+                    }
+                });
+
+                if (!response.ok) {
+                    clearInterval(activeIntervals[cms]);
+                    clearTimeout(activeTimers[cms]);
+                    statusBox.className = 'status-box status-red';
+                    statusBox.innerHTML = `Hata: Görev sorgulama başarısız oldu.`;
+                    return;
+                }
+
+                const data = await response.json();
+                
+                if (data.status === 'processing' || data.status === 'pending') {
+                    if (cms === 'wp') {
+                        statusBox.innerHTML = `WP-Cron: Yapay zeka sesini sentezliyor, lütfen bekleyin... (Her 30s'de bir sorgulanıyor)<br><small>Task ID: ${taskId}</small>`;
+                    } else {
+                        statusBox.innerHTML = `.NET Poller: Yapay zeka sesini sentezliyor, lütfen bekleyin... (Her 10s'de bir sorgulanıyor)<br><small>Task ID: ${taskId}</small>`;
+                    }
+                } else if (data.status === 'done' && data.audio_url) {
+                    clearInterval(activeIntervals[cms]);
+                    clearTimeout(activeTimers[cms]);
+                    
+                    statusBox.className = 'status-box status-green';
+                    statusBox.innerHTML = 'Seslendirme Başarıyla Tamamlandı ve Önbelleğe Alındı!';
+
+                    // Build full audio URL
+                    const fullAudioUrl = window.location.origin + data.audio_url;
+
+                    // Dynamically inject the Player HTML structure
+                    const playerContainer = document.getElementById(cms + 'PlayerContainer');
+                    playerContainer.innerHTML = `
+                        <div class="voicesync-player" data-src="${fullAudioUrl}">
+                            <button class="vs-play-btn" onclick="vsToggle(this)">▶ Yazıyı Dinle</button>
+                            <span class="vs-time">0:00</span>
+                            <audio class="vs-audio-element" preload="none"></audio>
+                        </div>
+                    `;
+
+                } else if (data.status.startsWith('error') || data.status === 'failed') {
+                    clearInterval(activeIntervals[cms]);
+                    clearTimeout(activeTimers[cms]);
+                    statusBox.className = 'status-box status-red';
+                    statusBox.innerHTML = `Hata: Sentezleme başarısız oldu. API Detayı: ${data.status}`;
+                }
+
+            } catch (err) {
+                // Continue polling on network issues
+                statusBox.innerHTML = `Bağlantı kesildi, tekrar deneniyor...<br><small>${err.message}</small>`;
+            }
+        }
+    </script>
+</body>
+</html>
